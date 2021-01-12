@@ -20,6 +20,7 @@
 | raspberry pi zero   | [adafruit](https://www.adafruit.com/product/3409) | 24.50 | x1 |
 | relays              | [banggood](https://usa.banggood.com/1-Channel-5V-Relay-Control-Module-Low-Level-Trigger-Optocoupler-Isolation-p-1556669.html) | 2.57 | x4 |
 | regulated psu       | [digikey](https://www.digikey.ca/en/products/detail/RS-50-5/1866-4157-ND/7706192) | 23.57 | x1 |
+
 ## Construction
 - sensors in the specimen container
 - specimen container in the bucket
