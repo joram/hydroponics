@@ -21,9 +21,17 @@
 | relay               | [banggood](https://usa.banggood.com/1-Channel-5V-Relay-Control-Module-Low-Level-Trigger-Optocoupler-Isolation-p-1556669.html) | 2.57 | x4 |
 
 ## Construction
-specimen container in the bucket, and circulating pump filtering into the 
+- sensors in the specimen container
+- specimen container in the bucket
+- nutrients/ph-adjustments pumps aimed into the bucket
+- circulating pump pumping under the plants
+- plants draining into the specimen container
 
 ### Electronics
+- wire each sensor to the pi
+- wire peristaltic pumps to the pi (via relays)
+- plug circulating plug into wall
+- plug lights into timer into wall
 
 ### Software
 - balance PH with two inputs (`PH up` and `PH down`)
