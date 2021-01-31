@@ -8,7 +8,7 @@ function App() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-  fetch("http://localhost:8000/api/v0/data")
+  fetch("/api/v0/data")
     .then(res => res.json())
     .then((result) => {
         setIsLoaded(true);
