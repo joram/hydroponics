@@ -3,11 +3,6 @@ import datetime
 from sqlalchemy import Column, Integer, DateTime, ForeignKey, Float
 
 from models.base import Base
-import sys
-#import fake_rpi
-
-#sys.modules['RPi'] = fake_rpi.RPi     # Fake RPi
-#sys.modules['RPi.GPIO'] = fake_rpi.RPi.GPIO # Fake GPIO
 
 
 class Datum(Base):
@@ -19,8 +14,4 @@ class Datum(Base):
     value = Column(Float)
 
     def __repr__(self):
-        return f"<Sensor name='{self.name}' />"
-
-    def poll(self):
-        GPIO.setup(0, GPIO.IN)
-        input = GPIO.input(0)
+        return f"<Datum name='{self.value}' />"

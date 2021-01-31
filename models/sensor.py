@@ -8,10 +8,9 @@ import busio
 from adafruit_bus_device.i2c_device import I2CDevice
 from sqlalchemy import Column, Integer, DateTime, String, Enum
 
-from models import Session, Datum
+from models import Session, Datum, engine
 from models.base import Base
 from models.trigger import Trigger
-from rpi import GPIO
 
 
 class SensorType(enum.Enum):
@@ -81,3 +80,11 @@ class Sensor(Base):
         self.kill_thread = True
         self.thread.join()
         self.thread = None
+
+
+def start_polling_all_sensors():
+    Base.metadata.create_all(engine)
+    session = Session()
+    sensors = session.query(Sensor)
+    for sensor in sensors:
+        sensor.start_polling()

@@ -14,6 +14,7 @@ setuptools.setup(
     url="https://github.com/joram/hydroponics",
     packages=[
         "Flask>=1.1.0",
+        "flask_cors",
         "sqlite3",
         "sqlalchemy",
         "RPi.GPIO",
