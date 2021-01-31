@@ -1,6 +1,6 @@
 import setuptools
 
-with open("README.md", "r", encoding="utf-8") as fh:
+with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
@@ -13,7 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/joram/hydroponics",
     packages=[
-        "flask",
+        "Flask>=1.1.0",
         "sqlite3",
         "sqlalchemy",
         "RPi.GPIO",

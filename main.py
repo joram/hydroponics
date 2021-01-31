@@ -53,3 +53,14 @@ if fresh_db:
     # session.add(nutrients_too_low)
 
     session.commit()
+
+
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return 'Index Page'
+
+app.run(host='0.0.0.0', port=8000)
+
