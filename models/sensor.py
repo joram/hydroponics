@@ -16,6 +16,7 @@ from models.trigger import Trigger
 class SensorType(enum.Enum):
     SWITCH = "switch"
     I2C = "i2c"
+    ANALOG = "analog"
 
 
 class Sensor(Base):
@@ -44,13 +45,24 @@ class Sensor(Base):
             temp -= 256.0
         return temp
 
-    def read_value(self):
+    def _read_analog_value(self) -> float:
+
+        return 0.1
+
+    def _read_i2c_value(self) -> float:
         bytes_read = bytearray(4)
         with busio.I2C(busio.SCL, board.SDA) as i2c:
             device = I2CDevice(i2c, self.i2c_address)
             with device:
                 device.readinto(bytes_read)
         return self.bytes_to_float(bytes_read)
+
+    def read_value(self) -> float:
+        if self.sensor_type == SensorType.I2C:
+            return self._read_i2c_value()
+
+        if self.sensor_type == SensorType.ANALOG:
+            return self._read_analog_value()
 
     def start_polling(self):
         if self.thread is not None:
