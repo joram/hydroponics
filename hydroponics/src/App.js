@@ -23,7 +23,10 @@ function App() {
 
   return (
     <div className="App">
+      <h2>PH levels</h2>
       <GraphComponent data={data} data_key="PH" height={500}/>
+
+      <h2>Conductivity</h2>
       <GraphComponent data={data} data_key="Conductivity" height={500}/>
     </div>
   );
