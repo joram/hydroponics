@@ -1,4 +1,4 @@
-import {CartesianGrid, Line, LineChart, XAxis, YAxis} from "recharts";
+import {CartesianGrid, Line, LineChart, XAxis, YAxis, Text} from "recharts";
 import { useState, useEffect } from 'react';
 
 function getWindowDimensions() {
@@ -27,18 +27,18 @@ function useWindowDimensions() {
 
 
 function GraphComponent(props) {
-    const { height, width } = useWindowDimensions();
+  const {width } = useWindowDimensions();
   return (
       <LineChart
           width={width}
-          height={height-props.lessHeight}
+          height={props.height}
           data={props.data}
       >
         <XAxis dataKey="name"/>
         <YAxis/>
+        <Text>{props.data_key}</Text>
         <CartesianGrid stroke="#eee" strokeDasharray="5 5"/>
-        <Line type="monotone" dataKey="PH" stroke="#8884d8" />
-        <Line type="monotone" dataKey="Conductivity" stroke="#82ca9d" />
+        <Line type="monotone" dataKey={props.data_key} stroke="#8884d8" />
       </LineChart>
   )
 }

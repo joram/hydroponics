@@ -23,7 +23,8 @@ function App() {
 
   return (
     <div className="App">
-      <GraphComponent data={data} lessHeight={500}/>
+      <GraphComponent data={data} data_key="PH" height={500}/>
+      <GraphComponent data={data} data_key="Conductivity" height={500}/>
     </div>
   );
 }
