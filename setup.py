@@ -20,9 +20,7 @@ setuptools.setup(
         "RPi.GPIO",
         "fake_rpi",
         "env",
-        "board",
-        "busio",
-        "adafruit-circuitpython-busdevice",
+        "PiPyADC",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

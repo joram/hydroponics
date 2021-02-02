@@ -2,9 +2,9 @@ import os
 
 from flask import Flask, send_from_directory
 
-from models import fresh_db, Session, Base, engine, Datum
-from models.sensor import start_polling_all_sensors
-from utils import setup_new_db
+from models import fresh_db, Session, Base, engine, Datum, DatumGroup
+from models.sensor import start_polling
+from utils.db import setup_new_db
 from flask_cors import CORS
 
 app = Flask(__name__, static_folder="./hydroponics/build")
@@ -27,9 +27,18 @@ def app_view(path):
 def data_view():
     Base.metadata.create_all(engine)
     session = Session()
-    data = session.query(Datum).order_by(Datum.created)
-    return {"data": [{"name": 'datum', "value": datum.value} for datum in data]}
+    datum_groups = session.query(DatumGroup).order_by(DatumGroup.created)
+    data = []
+    for dg in datum_groups:
+        datapoint = {"name":f"{dg.created}"}
+        for datum in session.query(Datum).filter(Datum.data_group_id==dg.id):
+            sensor = session.query(Sensor).filter(Sensor.id==datum.sensor_id)
+            datapoint[sesnor.name] = datum.value
+        data.append(datapoint)
+    import pprint
+    pprint.pprint(data)
+    return {"data": data}
 
 
-start_polling_all_sensors()
+start_polling()
 app.run(host='0.0.0.0', port=8000)

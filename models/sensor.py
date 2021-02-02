@@ -8,9 +8,10 @@ import busio
 from adafruit_bus_device.i2c_device import I2CDevice
 from sqlalchemy import Column, Integer, DateTime, String, Enum
 
-from models import Session, Datum, engine
+from models import Session, DatumGroup, Datum, engine
 from models.base import Base
 from models.trigger import Trigger
+from utils.adc import read_analog_value
 
 
 class SensorType(enum.Enum):
@@ -27,13 +28,10 @@ class Sensor(Base):
     name = Column(String)
     gpio_pin = Column(Integer)
     i2c_address = Column(Integer)
-    wait = Column(Integer)
     last_reading_at = Column(DateTime, default=datetime.datetime.utcnow)
     sensor_type = Column(Enum(SensorType))
     polling_period_seconds = Column(Integer)
 
-    thread = None
-    kill_thread = False
 
     def __repr__(self):
         return f"<Sensor name='{self.name}' />"
@@ -46,8 +44,7 @@ class Sensor(Base):
         return temp
 
     def _read_analog_value(self) -> float:
-
-        return 0.1
+        return read_analog_value(self.gpio_pin)
 
     def _read_i2c_value(self) -> float:
         bytes_read = bytearray(4)
@@ -64,39 +61,46 @@ class Sensor(Base):
         if self.sensor_type == SensorType.ANALOG:
             return self._read_analog_value()
 
-    def start_polling(self):
-        if self.thread is not None:
-            return
+wait = 5
+thread = None
+kill_thread = False
 
-        def _polling():
-            while not self.kill_thread:
-                datum = Datum(value=self.read_value())
-                session = Session()
+
+def start_polling():
+    global thread
+    global kill_thread
+    global wait
+
+    if thread is not None:
+        return
+
+    def _polling():
+        while not kill_thread:
+            session = Session()
+            sensors = session.query(Sensor).all()
+            datum_group = DatumGroup()
+            session.add(datum_group)
+            for sensor in sensors:
+                datum = Datum(value=sensor.read_value(), datum_group_id=datum_group.id)
+                print(f"sensor:{sensor}, value:{datum.value}")
                 session.add(datum)
-                session.commit()
-
-                triggers = session.query(Trigger).filter(Trigger.sensor == self.id)
+            
+                triggers = session.query(Trigger).filter(Trigger.sensor == sensor.id)
                 for trigger in triggers:
                     trigger.evaluate(datum)
 
-                time.sleep(self.wait)
+            session.commit()
+            time.sleep(wait)
 
-        self.kill_thread = False
-        self.thread = threading.Thread(target=_polling)
-        self.thread.start()
+    kill_thread = False
+    thread = threading.Thread(target=_polling)
+    thread.start()
 
-    def stop_polling(self):
-        if self.thread is None:
-            return
+def stop_polling():
+    if thread is None:
+        return
 
-        self.kill_thread = True
-        self.thread.join()
-        self.thread = None
+    kill_thread = True
+    thread.join()
+    thread = None
 
-
-def start_polling_all_sensors():
-    Base.metadata.create_all(engine)
-    session = Session()
-    sensors = session.query(Sensor)
-    for sensor in sensors:
-        sensor.start_polling()

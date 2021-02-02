@@ -6,8 +6,8 @@ def setup_new_db():
     Base.metadata.create_all(engine)
 
     session = Session()
-    ph = Sensor(name="PH", gpio_pin=21, sensor_type=SensorType.I2C)
-    conductivity = Sensor(name="Conductivity", gpio_pin=22, sensor_type=SensorType.I2C)
+    ph = Sensor(name="PH", gpio_pin=6, sensor_type=SensorType.ANALOG)
+    conductivity = Sensor(name="Conductivity", gpio_pin=7, sensor_type=SensorType.ANALOG)
     float_sensor = Sensor(name="Float", gpio_pin=23, sensor_type=SensorType.SWITCH)
 
     ph_up = Actuator(name="PH Up", gpio_pin=24)
