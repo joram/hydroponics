@@ -81,7 +81,7 @@ def start_polling():
             datum_group = DatumGroup()
             session.add(datum_group)
             for sensor in sensors:
-                datum = Datum(value=sensor.read_value(), datum_group_id=datum_group.id)
+                datum = Datum(value=sensor.read_value(), sensor_id=sensor.id, datum_group_id=datum_group.id)
                 print(f"sensor:{sensor}, value:{datum.value}")
                 session.add(datum)
             
