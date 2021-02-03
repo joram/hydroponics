@@ -1,13 +1,15 @@
 import os
 
 from flask import Flask, send_from_directory
+from flask_sqlalchemy import SQLAlchemy
 
-from models import fresh_db, Session, Base, engine, Datapoint
+from models import fresh_db, Datapoint
 from models.datapoint import start_polling
 from utils.db import setup_new_db
 from flask_cors import CORS
 
 app = Flask(__name__, static_folder="./hydroponics/build")
+db = SQLAlchemy(app)
 CORS(app)
 if fresh_db:
     setup_new_db()
@@ -26,7 +28,7 @@ def app_view(path):
 @app.route('/api/v0/data')
 def data_view():
     data = []
-    qs = Session().query(Datapoint).order_by(Datapoint.created).all()
+    qs = db.session.query(Datapoint).order_by(Datapoint.created).all()
     for datapoint in qs:
         data.append({
             "name": f"{datapoint.created}",
