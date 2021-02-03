@@ -9,9 +9,12 @@ from flask_cors import CORS
 
 app = Flask(__name__, static_folder="./hydroponics/build")
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./db.sqlite'
-db = SQLAlchemy(app)
 CORS(app)
-if fresh_db:
+
+db = SQLAlchemy(app)
+dir_path = os.path.dirname(os.path.realpath(__file__))
+filepath = os.path.join(dir_path, './db.sqlite')
+if not os.path.exists(filepath):
     db.create_all()
 
 
