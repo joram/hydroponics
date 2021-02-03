@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, send_from_directory
 
-from models import fresh_db, Session, Base, engine, Datum, DatumGroup, Sensor
+from models import fresh_db, Session, Base, engine, Datum, DatumGroup, Sensor, Datapoint
 from models.sensor import start_polling
 from utils.db import setup_new_db
 from flask_cors import CORS
@@ -25,17 +25,15 @@ def app_view(path):
 
 @app.route('/api/v0/data')
 def data_view():
-    Base.metadata.create_all(engine)
-    session = Session()
-    datum_groups = session.query(DatumGroup).order_by(DatumGroup.created).all()
     data = []
-    for dg in datum_groups:
-        datapoint = {"name":f"{dg.created}"}
-        qs = session.query(Datum).filter_by(datum_group_id=dg.id).all()
-        for datum in qs:
-            sensor = session.query(Sensor).filter_by(id=datum.sensor_id).all()[0]
-            datapoint[sensor.name] = datum.value
-        data.append(datapoint)
+    qs = Datapoint.query.order_by(Datapoint.created).all()
+    for datapoint in qs:
+        data.append({
+            "name": f"{datapoint.created}",
+            "PH": datapoint.ph,
+            "Conductivity": datapoint.conductivity,
+        })
+    print(len(qs))
     return {"data": data}
 
 
