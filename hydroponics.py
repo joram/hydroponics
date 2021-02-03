@@ -2,8 +2,8 @@ import os
 
 from flask import Flask, send_from_directory
 
-from models import fresh_db, Session, Base, engine, Datum, DatumGroup, Sensor, Datapoint
-from models.sensor import start_polling
+from models import fresh_db, Session, Base, engine, Datapoint
+from models.datapoint import start_polling
 from utils.db import setup_new_db
 from flask_cors import CORS
 
@@ -26,7 +26,7 @@ def app_view(path):
 @app.route('/api/v0/data')
 def data_view():
     data = []
-    qs = Datapoint.query.order_by(Datapoint.created).all()
+    qs = Session().query(Datapoint).order_by(Datapoint.created).all()
     for datapoint in qs:
         data.append({
             "name": f"{datapoint.created}",
