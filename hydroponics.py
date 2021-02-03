@@ -5,14 +5,14 @@ from flask_sqlalchemy import SQLAlchemy
 
 from models import fresh_db, Datapoint
 from models.datapoint import start_polling
-from utils.db import setup_new_db
 from flask_cors import CORS
 
 app = Flask(__name__, static_folder="./hydroponics/build")
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./db.sqlite'
 db = SQLAlchemy(app)
 CORS(app)
 if fresh_db:
-    setup_new_db()
+    db.create_all()
 
 
 @app.route('/', defaults={'path': ''})
