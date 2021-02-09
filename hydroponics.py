@@ -34,7 +34,7 @@ def data_view():
     qs = db.session.query(Datapoint).order_by(Datapoint.created).all()
     for datapoint in qs:
         data.append({
-            "name": f"{datapoint.created}",
+            "name": datapoint.created.strftime('%H:%M:%S%p'),
             "PH": datapoint.ph,
             "Conductivity": datapoint.conductivity,
         })

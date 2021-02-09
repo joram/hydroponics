@@ -21,12 +21,14 @@ function App() {
     return <div>Loading...</div>;
   }
 
+  let latestDatapoint = data[data.length-1]
+
   return (
     <div className="App">
-      <h2>PH levels</h2>
+      <h2>PH levels ({latestDatapoint["PH"]})</h2>
       <GraphComponent data={data} data_key="PH" height={500}/>
 
-      <h2>Conductivity</h2>
+      <h2>Conductivity ({latestDatapoint["Conductivity"]})</h2>
       <GraphComponent data={data} data_key="Conductivity" height={500}/>
     </div>
   );

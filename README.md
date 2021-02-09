@@ -11,7 +11,7 @@
 - plants draining into the specimen container
 
 ### Electronics
-- wire each sensor to the pi
+- wire each sensor to the pi's A2D converter border [docs](https://www.waveshare.com/w/upload/b/b7/High-Precision-AD-DA-User-Manual.pdf)
 - wire peristaltic pumps to the pi (via relays)
 - plug circulating plug into wall
 - plug lights into timer into wall
