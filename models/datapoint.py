@@ -4,12 +4,13 @@ import time
 
 from sqlalchemy import Column, Integer, DateTime, Float, Boolean
 
-from models import Session
-from models.base import Base
-from utils.adc import read_analog_value
+from core import db
+#from models import Session
+#from models.base import Base
+from utils.adc import read_analog_values
 
 
-class Datapoint(Base):
+class Datapoint(db.Model):
     __tablename__ = 'datapoints'
 
     id = Column(Integer, primary_key=True)
@@ -32,13 +33,15 @@ class Datapoint(Base):
 
     @classmethod
     def create(cls):
+        [ph, conductivity] = read_analog_values([7, 6])
         return Datapoint(
-            ph=read_analog_value(7),
-            conductivity=read_analog_value(6),
+            created=datetime.datetime.now(),
+            ph=ph,
+            conductivity=conductivity,
             float=True,
         )
 
-
+db.create_all()
 thread = None
 kill_thread = False
 
@@ -51,11 +54,10 @@ def start_polling(wait=5):
 
     def _polling():
         while not kill_thread:
-            session = Session()
             datapoint = Datapoint.create()
             print(datapoint)
-            session.add(datapoint)
-            session.commit()
+            db.session.add(datapoint)
+            db.session.commit()
             time.sleep(wait)
 
     kill_thread = False

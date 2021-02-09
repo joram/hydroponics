@@ -1,20 +1,15 @@
 import os
 
-from flask import Flask, send_from_directory
-from flask_sqlalchemy import SQLAlchemy
-
-from models import fresh_db, Datapoint
+from core import app, db
+from models import Datapoint
 from models.datapoint import start_polling
-from flask_cors import CORS
 
-app = Flask(__name__, static_folder="./hydroponics/build")
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./db.sqlite'
-CORS(app)
+from flask import send_from_directory
 
-db = SQLAlchemy(app)
 dir_path = os.path.dirname(os.path.realpath(__file__))
 filepath = os.path.join(dir_path, './db.sqlite')
 if not os.path.exists(filepath):
+    print("creating db")
     db.create_all()
 
 
@@ -42,5 +37,6 @@ def data_view():
     return {"data": data}
 
 
-start_polling()
-app.run(host='0.0.0.0', port=8000)
+if __name__ == "__main__":
+    start_polling()
+    app.run(host='0.0.0.0', port=8000)
