@@ -11,8 +11,8 @@ function App() {
   fetch("/api/v0/data")
     .then(res => res.json())
     .then((result) => {
-        setIsLoaded(true);
         setData(result["data"]);
+        setIsLoaded(true);
       }
     )
   }, [])
@@ -22,6 +22,12 @@ function App() {
   }
 
   let latestDatapoint = data.slice(-1)[0]
+  if (data.slice(-1).length === 0){
+      latestDatapoint = {
+          PH: "?",
+          Conductivity: "?",
+      }
+  }
   console.log(data.slice(-1), latestDatapoint)
 
   return (
