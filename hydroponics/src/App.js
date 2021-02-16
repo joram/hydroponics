@@ -21,8 +21,8 @@ function App() {
     return <div>Loading...</div>;
   }
 
-  let latestDatapoint = data[data.length-1]
-  console.log(latestDatapoint)
+  let latestDatapoint = data.slice(-1)[0]
+  console.log(data.slice(-1), latestDatapoint)
 
   return (
     <div className="App">
