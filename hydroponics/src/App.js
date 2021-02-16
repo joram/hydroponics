@@ -22,6 +22,7 @@ function App() {
   }
 
   let latestDatapoint = data[data.length-1]
+  console.log(latestDatapoint)
 
   return (
     <div className="App">
